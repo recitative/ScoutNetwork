@@ -50,9 +50,9 @@ public class PortScanner {
 
         executor.shutdown();
         while (!executor.isTerminated()) {
-            
+
         }
 
-        System.out.println(ConsoleColor.YELLOW + "[INFO]" + ConsoleColor.RESET + "Scanning completed.");
+        System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + "Scanning completed.");
     }
 }
