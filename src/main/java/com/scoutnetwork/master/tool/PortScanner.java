@@ -30,7 +30,7 @@ public class PortScanner {
         System.out.print("Enter the number of threads: ");
         int threadCount = scanner.nextInt();
         if (threadCount < 1 || threadCount > 100) {
-            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + "Invalid number of threads. Defaulting to 10.");
+            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Invalid number of threads. Defaulting to 10.");
             threadCount = 10;
         }
 
@@ -41,9 +41,9 @@ public class PortScanner {
             executor.submit(() -> {
                 try (Socket socket = new Socket(host, currentPort)) {
                     socket.setSoTimeout(timeout);
-                    System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + "Port " + currentPort + " is open");
+                    System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Port " + currentPort + " is open");
                 } catch (Exception e) {
-                    System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + "Port " + currentPort + " is closed");
+                    System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Port " + currentPort + " is closed");
                 }
             });
         }
@@ -53,6 +53,6 @@ public class PortScanner {
 
         }
 
-        System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + "Scanning completed.");
+        System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Scanning completed.");
     }
 }
