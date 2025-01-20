@@ -23,10 +23,10 @@ public class PortScanner {
         System.out.print("Enter the destination port: ");
         int endPort = scanner.nextInt();
 
-        System.out.print("Enter the timeout in milliseconds: ");
+        System.out.print("Enter the timeout in ms: ");
         timeout = scanner.nextInt();
 
-        System.out.print("Enter the number of threads (1-100): ");
+        System.out.print("Enter the number of threads: ");
         int threadCount = scanner.nextInt();
         if (threadCount < 1 || threadCount > 100) {
             System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + "Invalid number of threads. Defaulting to 10.");
