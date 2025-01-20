@@ -2,57 +2,44 @@ package com.scoutnetwork.master.tool;
 
 import com.scoutnetwork.master.style.ConsoleColor;
 
-import java.net.Socket;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 @author Sma1lo
 */
 
-public class PortScanner {
-    private static int timeout;
+public class NetworkMonitor {
+    public static void monitorConnections() {
+        try {
+            System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET +"Active network connections:\n");
+            List<String> processOutput = executeCommand("netstat", "-tun");
 
-    public static void scanPorts(Scanner scanner) {
-        System.out.print("Enter host to scan: ");
-        String host = scanner.nextLine();
-
-        System.out.print("Enter the starting port: ");
-        int startPort = scanner.nextInt();
-
-        System.out.print("Enter the destination port: ");
-        int endPort = scanner.nextInt();
-
-        System.out.print("Enter the timeout in ms: ");
-        timeout = scanner.nextInt();
-
-        System.out.print("Enter the number of threads: ");
-        int threadCount = scanner.nextInt();
-        if (threadCount < 1 || threadCount > 100) {
-            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Invalid number of threads. Defaulting to 10.");
-            threadCount = 10;
+            for (String line : processOutput) {
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Network Monitoring: " + e.getMessage());
         }
+    }
 
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-
-        for (int port = startPort; port <= endPort; port++) {
-            final int currentPort = port;
-            executor.submit(() -> {
-                try (Socket socket = new Socket(host, currentPort)) {
-                    socket.setSoTimeout(timeout);
-                    System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Port " + currentPort + " is open");
-                } catch (Exception e) {
-                    System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Port " + currentPort + " is closed");
+    private static List<String> executeCommand(String... command) {
+        List<String> output = new ArrayList<>();
+        try {
+            ProcessBuilder builder = new ProcessBuilder(command);
+            Process process = builder.start();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.add(line);
                 }
-            });
+            }
+            process.waitFor();
+        } catch (Exception e) {
+            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET +" Executing command: " + e.getMessage());
         }
-
-        executor.shutdown();
-        while (!executor.isTerminated()) {
-
-        }
-
-        System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Scanning completed.");
+        return output;
     }
 }
