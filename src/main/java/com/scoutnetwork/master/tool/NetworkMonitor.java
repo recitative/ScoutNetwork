@@ -14,8 +14,8 @@ import java.util.List;
 public class NetworkMonitor {
     public static void monitorConnections() {
         try {
-            System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET +"Active network connections:");
-            List<String> processOutput = executeCommand("netstat", "-tun");
+            System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Active network connections:");
+            List<String> processOutput = executeCommand("ss", "-tun");
 
             for (String line : processOutput) {
                 System.out.println(line);
@@ -38,7 +38,7 @@ public class NetworkMonitor {
             }
             process.waitFor();
         } catch (Exception e) {
-            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET +" Executing command: " + e.getMessage());
+            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Executing command: " + e.getMessage());
         }
         return output;
     }
