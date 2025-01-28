@@ -22,3 +22,23 @@ The program offers the following capabilities:
 ```bash 
 git clone https://github.com/recitative/ScoutNetwork
 ```
+
+```bash
+cd ScoutNetwork
+```
+
+```bash
+javac -cp "build/libs/*" src/main/java/com/scoutnetwork/master/tool/*.java src/main/java/com/scoutnetwork/master/style/*.java && java -cp "build/libs/*:." com.scoutnetwork.master.tool.WhoisTool
+```
+
+```bash 
+cd src/main/java
+```
+
+```bash
+javac com/scoutnetwork/master/ScoutNetwork.java
+```
+
+```bash
+java com.scoutnetwork.master.ScoutNetwork
+```
