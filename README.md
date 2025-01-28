@@ -18,3 +18,5 @@ The program offers the following capabilities:
 ## Installation
 
 ### Linux
+
+```bash 
