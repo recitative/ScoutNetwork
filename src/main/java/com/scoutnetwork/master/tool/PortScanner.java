@@ -11,7 +11,7 @@ import java.util.List;
 @author Sma1lo
 */
 
-public class NetworkMonitor {
+public class PortScanner {
     public static void monitorConnections() {
         try {
             System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET +"Active network connections:\n");
