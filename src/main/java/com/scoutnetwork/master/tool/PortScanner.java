@@ -2,44 +2,35 @@ package com.scoutnetwork.master.tool;
 
 import com.scoutnetwork.master.style.ConsoleColor;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-/*
-@author Sma1lo
-*/
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class PortScanner {
-    public static void monitorConnections() {
-        try {
-            System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET +"Active network connections:\n");
-            List<String> processOutput = executeCommand("netstat", "-tun");
 
-            for (String line : processOutput) {
-                System.out.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Network Monitoring: " + e.getMessage());
+    public static void scanPorts(Scanner scanner) {
+        System.out.print("Enter the host (IP or domain name) to scan: ");
+        String host = scanner.nextLine();
+
+        System.out.print("Enter the starting port number: ");
+        int startPort = scanner.nextInt();
+
+        System.out.print("Enter the ending port number: ");
+        int endPort = scanner.nextInt();
+
+        System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Scanning ports on host: " + host);
+        
+        for (int port = startPort; port <= endPort; port++) {
+            scanPort(host, port);
         }
     }
 
-    private static List<String> executeCommand(String... command) {
-        List<String> output = new ArrayList<>();
-        try {
-            ProcessBuilder builder = new ProcessBuilder(command);
-            Process process = builder.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.add(line);
-                }
-            }
-            process.waitFor();
-        } catch (Exception e) {
-            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET +" Executing command: " + e.getMessage());
+    private static void scanPort(String host, int port) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new java.net.InetSocketAddress(host, port), 2000);
+            System.out.println(ConsoleColor.GREEN + "[OPEN]" + ConsoleColor.RESET + " Port " + port + " is open.");
+        } catch (IOException e) {
+            System.out.println(ConsoleColor.RED + "[CLOSED]" + ConsoleColor.RESET + " Port " + port + " is closed.");
         }
-        return output;
     }
 }
