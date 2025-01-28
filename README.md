@@ -20,3 +20,5 @@ The program offers the following capabilities:
 ### Linux
 
 ```bash 
+git clone https://github.com/recitative/ScoutNetwork
+```
