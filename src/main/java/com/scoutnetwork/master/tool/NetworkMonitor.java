@@ -18,7 +18,7 @@ public class NetworkMonitor {
             List<String> processOutput = executeCommand("ss", "-tun");
 
             if (processOutput.isEmpty()) {
-                System.out.println(ConsoleColor.YELLOW + "[INFO]" + ConsoleColor.RESET + " No active connections found.");
+                System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " No active connections found.");
             } else {
                 for (String line : processOutput) {
                     System.out.println(line);
