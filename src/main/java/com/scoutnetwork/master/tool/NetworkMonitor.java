@@ -20,9 +20,7 @@ public class NetworkMonitor {
             if (processOutput.isEmpty()) {
                 System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " No active connections found.");
             } else {
-                for (String line : processOutput) {
-                    System.out.println(line);
-                }
+                processOutput.forEach(System.out::println);
             }
         } catch (Exception e) {
             System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Network Monitoring: " + e.getMessage());
@@ -34,7 +32,7 @@ public class NetworkMonitor {
         try {
             ProcessBuilder builder = new ProcessBuilder(command);
             Process process = builder.start();
-            
+
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -42,9 +40,8 @@ public class NetworkMonitor {
                 }
             }
 
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Command exited with code: " + exitCode);
+            if (process.waitFor() != 0) {
+                System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Command exited with code: " + process.exitValue());
             }
         } catch (Exception e) {
             System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Executing command: " + e.getMessage());
