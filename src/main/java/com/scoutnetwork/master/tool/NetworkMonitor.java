@@ -17,8 +17,12 @@ public class NetworkMonitor {
             System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + " Active network connections:");
             List<String> processOutput = executeCommand("ss", "-tun");
 
-            for (String line : processOutput) {
-                System.out.println(line);
+            if (processOutput.isEmpty()) {
+                System.out.println(ConsoleColor.YELLOW + "[INFO]" + ConsoleColor.RESET + " No active connections found.");
+            } else {
+                for (String line : processOutput) {
+                    System.out.println(line);
+                }
             }
         } catch (Exception e) {
             System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Network Monitoring: " + e.getMessage());
@@ -30,13 +34,18 @@ public class NetworkMonitor {
         try {
             ProcessBuilder builder = new ProcessBuilder(command);
             Process process = builder.start();
+            
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     output.add(line);
                 }
             }
-            process.waitFor();
+
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Command exited with code: " + exitCode);
+            }
         } catch (Exception e) {
             System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " Executing command: " + e.getMessage());
         }
