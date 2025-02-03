@@ -42,3 +42,7 @@ javac com/scoutnetwork/master/ScoutNetwork.java
 ```bash
 java com.scoutnetwork.master.ScoutNetwork
 ```
+
+## Authors
+
+- [Sma1lo_](https://github.com/Sma1lo) - Main Developer
