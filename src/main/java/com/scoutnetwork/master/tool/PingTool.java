@@ -2,7 +2,8 @@ package com.scoutnetwork.master.tool;
 
 import com.scoutnetwork.master.style.ConsoleColor;
 
-import java.net.InetAddress;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 /*
@@ -15,14 +16,23 @@ public class PingTool {
         String host = scanner.nextLine();
 
         try {
-            InetAddress address = InetAddress.getByName(host);
-            if (address.isReachable(1000)) {
-                System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + host + " available");
-            } else {
-                System.out.println(ConsoleColor.GREEN + "[INFO]" + ConsoleColor.RESET + host + " unavailable");
+            Process process = Runtime.getRuntime().exec("ping " + host);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                if (line.contains("Destination Host Unreachable") || line.contains("Request timed out")) {
+                    System.out.println(ConsoleColor.GREEN + "[INFO] " + ConsoleColor.RESET + host + " unavailable");
+                    return;
+                }
+                if (line.contains("ttl=")) {
+                    System.out.println(ConsoleColor.GREEN + "[INFO] " + ConsoleColor.RESET + host + " available");
+                    return;
+                }
             }
+            process.waitFor();
         } catch (Exception e) {
-            System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " " + e.getMessage());
+            System.out.println(ConsoleColor.RED + "[ERROR] " + ConsoleColor.RESET + " " + e.getMessage());
         }
     }
 }
