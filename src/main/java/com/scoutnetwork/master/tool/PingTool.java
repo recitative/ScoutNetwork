@@ -2,7 +2,6 @@ package com.scoutnetwork.master.tool;
 
 import com.scoutnetwork.master.style.ConsoleColor;
 
-import java.net.InetAddress;
 import java.util.Scanner;
 
 /*
@@ -15,11 +14,20 @@ public class PingTool {
         String host = scanner.nextLine();
 
         try {
-            InetAddress address = InetAddress.getByName(host);
-            if (address.isReachable(1000)) {
-                System.out.println(ConsoleColor.GREEN + "[AVAILABLE]" + ConsoleColor.RESET + host + " available");
+            ProcessBuilder processBuilder;
+            if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                processBuilder = new ProcessBuilder("cmd", "/c", "ping -n 1 -w 1000 " + host);
             } else {
-                System.out.println(ConsoleColor.RED + "[UNAVAILABLE]" + ConsoleColor.RESET + host + " unavailable");
+                processBuilder = new ProcessBuilder("ping", "-c", "1", "-W", "1", host);
+            }
+
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                System.out.println(ConsoleColor.GREEN + "[AVAILABLE]" + ConsoleColor.RESET + " " + host + " available");
+            } else {
+                System.out.println(ConsoleColor.RED + "[UNAVAILABLE]" + ConsoleColor.RESET + " " + host + " unavailable");
             }
         } catch (Exception e) {
             System.out.println(ConsoleColor.RED + "[ERROR]" + ConsoleColor.RESET + " " + e.getMessage());
