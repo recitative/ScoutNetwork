@@ -5,6 +5,7 @@ import com.scoutnetwork.master.style.ConsoleColor;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.io.IOException;
 
 /*
 @author Sma1lo
@@ -17,21 +18,26 @@ public class PingTool {
 
         try {
             Process process = Runtime.getRuntime().exec("ping " + host);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                if (line.contains("Destination Host Unreachable") || line.contains("Request timed out")) {
-                    System.out.println(ConsoleColor.GREEN + "[INFO] " + ConsoleColor.RESET + host + " unavailable");
-                    return;
-                }
-                if (line.contains("ttl=")) {
-                    System.out.println(ConsoleColor.GREEN + "[INFO] " + ConsoleColor.RESET + host + " available");
-                    return;
-                }
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String s;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
             }
-            process.waitFor();
-        } catch (Exception e) {
+
+            while ((s = stdError.readLine()) != null) {
+                System.err.println(s);
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println(ConsoleColor.GREEN + "[AVAILABLE] " + ConsoleColor.RESET + host + " available");
+            } else {
+                System.out.println(ConsoleColor.RED + "[UNAVAILABLE] " + ConsoleColor.RESET + host + " unavailable (exit code: " + exitCode + ")");
+            }
+
+        } catch (IOException | InterruptedException e) {
             System.out.println(ConsoleColor.RED + "[ERROR] " + ConsoleColor.RESET + " " + e.getMessage());
         }
     }
