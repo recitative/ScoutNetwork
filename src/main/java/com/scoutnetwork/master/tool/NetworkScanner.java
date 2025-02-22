@@ -32,11 +32,10 @@ public class NetworkScanner {
         } catch (InterruptedException e) {
             executor.shutdownNow();
         }
-        System.out.println("Network scan completed.");
+        System.out.println(ConsoleColor.GREEN + "[INFO]"+ ConsoleColor.RESET + " Network scan completed.");
     }
 
     private static void checkHost(String host) {
-        System.out.println(ConsoleColor.YELLOW + "[DEBUG] Checking " + host + ConsoleColor.RESET);
         try {
             InetAddress inet = InetAddress.getByName(host);
             if (inet.isReachable(1000)) {
