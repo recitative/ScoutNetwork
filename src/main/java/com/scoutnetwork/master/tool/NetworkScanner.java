@@ -2,7 +2,8 @@ package com.scoutnetwork.master.tool;
 
 import com.scoutnetwork.master.style.ConsoleColor;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,11 +37,12 @@ public class NetworkScanner {
 
     private static void checkHost(String host) {
         try {
-            Thread.sleep(1);
-            try (Socket socket = new Socket(host, 80)) {
-                System.out.println(ConsoleColor.GREEN + "[INFO] " + ConsoleColor.RESET + host + " available");
+            InetAddress inet = InetAddress.getByName(host);
+            if (inet.isReachable(1000)) {
+                System.out.println(ConsoleColor.GREEN + "[AVAILABLE] " + ConsoleColor.RESET + host + " available");
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println(ConsoleColor.RED + "[UNAVAILABLE] " + ConsoleColor.RESET + host + " unavailable");
         }
     }
 }
