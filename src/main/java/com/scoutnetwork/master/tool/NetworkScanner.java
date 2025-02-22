@@ -36,10 +36,13 @@ public class NetworkScanner {
     }
 
     private static void checkHost(String host) {
+        System.out.println(ConsoleColor.YELLOW + "[DEBUG] Checking " + host + ConsoleColor.RESET);
         try {
             InetAddress inet = InetAddress.getByName(host);
             if (inet.isReachable(1000)) {
                 System.out.println(ConsoleColor.GREEN + "[AVAILABLE] " + ConsoleColor.RESET + host + " available");
+            } else {
+                System.out.println(ConsoleColor.RED + "[UNAVAILABLE] " + ConsoleColor.RESET + host + " unavailable");
             }
         } catch (IOException e) {
             System.out.println(ConsoleColor.RED + "[UNAVAILABLE] " + ConsoleColor.RESET + host + " unavailable");
