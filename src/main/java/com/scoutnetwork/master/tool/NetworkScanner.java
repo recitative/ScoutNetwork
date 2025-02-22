@@ -2,14 +2,14 @@ package com.scoutnetwork.master.tool;
 
 import com.scoutnetwork.master.style.ConsoleColor;
 
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /*
-@author Sma1lo
+@author: Sma1lo
 */
 
 public class NetworkScanner {
@@ -24,8 +24,14 @@ public class NetworkScanner {
         }
 
         executor.shutdown();
-        while (!executor.isTerminated()) {
+        try {
+            if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
         }
+        System.out.println("Network scan completed.");
     }
 
     private static void checkHost(String host) {
