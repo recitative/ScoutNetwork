@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /*
-@author: Sma1lo
+@author Sma1lo
 */
 
 public class NetworkScanner {
